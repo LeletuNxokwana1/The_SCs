@@ -4,7 +4,6 @@
  */
 package travelcentralflightmanagementsystem;
 
-import java.awt.*;
 import java.util.Calendar;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -14,7 +13,7 @@ import java.util.Date;
 
 /**
  *
- * @author lelet
+ * @author the_scs
  */
 public class SearchFlightUI extends javax.swing.JFrame {
 
@@ -45,6 +44,16 @@ public class SearchFlightUI extends javax.swing.JFrame {
 
         // Set the arrivalComboBoxModel as the model for cmbArrival
         cmboxDestination.setModel(arrivalComboBoxModel);
+        
+        if (!SessionManager.isLoggedIn()) {
+            lblName.setVisible(false);
+            btnLogOut.setVisible(false);
+            btnHotelBooking.setVisible(false);
+        } else {
+            lblName.setText(SessionManager.getLoggedInUsername());
+            btnLogin.setVisible(false);
+            btnSignUp.setVisible(false);
+        }
 
     }
 
@@ -59,8 +68,6 @@ public class SearchFlightUI extends javax.swing.JFrame {
 
         btngrpBookingType = new javax.swing.ButtonGroup();
         pnlMain = new javax.swing.JPanel();
-        pnlMenu = new javax.swing.JPanel();
-        btnLogin = new javax.swing.JButton();
         pnlDetails = new javax.swing.JPanel();
         lblDepartureAirport = new javax.swing.JLabel();
         lblArrivalAirport = new javax.swing.JLabel();
@@ -82,45 +89,20 @@ public class SearchFlightUI extends javax.swing.JFrame {
         lblRightArrow1 = new javax.swing.JLabel();
         lblTCFlights = new javax.swing.JLabel();
         lblMain = new javax.swing.JLabel();
+        pnlHead = new javax.swing.JPanel();
+        btnLogOut = new javax.swing.JButton();
+        lblTravel = new javax.swing.JLabel();
+        lblCentral = new javax.swing.JLabel();
+        lblName = new javax.swing.JLabel();
+        btnLogin = new javax.swing.JButton();
+        btnSignUp = new javax.swing.JButton();
+        btnHotelBooking = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Travel Central Flight Management System");
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
         pnlMain.setLayout(null);
-
-        pnlMenu.setBackground(new java.awt.Color(0, 0, 0));
-
-        btnLogin.setBackground(new java.awt.Color(0, 0, 0));
-        btnLogin.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        btnLogin.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogin.setText("Login");
-        btnLogin.setBorder(javax.swing.BorderFactory.createEtchedBorder(java.awt.Color.white, null));
-        btnLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
-        pnlMenu.setLayout(pnlMenuLayout);
-        pnlMenuLayout.setHorizontalGroup(
-            pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuLayout.createSequentialGroup()
-                .addContainerGap(1360, Short.MAX_VALUE)
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
-        );
-        pnlMenuLayout.setVerticalGroup(
-            pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlMenuLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(btnLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(24, Short.MAX_VALUE))
-        );
-
-        pnlMain.add(pnlMenu);
-        pnlMenu.setBounds(0, 0, 1520, 80);
 
         pnlDetails.setBackground(new java.awt.Color(255, 255, 255));
         pnlDetails.setBorder(javax.swing.BorderFactory.createEtchedBorder(null, new java.awt.Color(0, 0, 0)));
@@ -269,8 +251,9 @@ public class SearchFlightUI extends javax.swing.JFrame {
         pnlDetails.add(spnNumPassengers);
         spnNumPassengers.setBounds(780, 110, 77, 31);
 
-        btnSearchFilghts.setBackground(new java.awt.Color(204, 204, 255));
+        btnSearchFilghts.setBackground(new java.awt.Color(0, 0, 0));
         btnSearchFilghts.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        btnSearchFilghts.setForeground(new java.awt.Color(255, 255, 255));
         btnSearchFilghts.setText("Search Flights");
         btnSearchFilghts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -288,12 +271,86 @@ public class SearchFlightUI extends javax.swing.JFrame {
         pnlMain.add(pnlDetails);
         pnlDetails.setBounds(184, 188, 1180, 280);
 
-        lblTCFlights.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 0, 48)); // NOI18N
+        lblTCFlights.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
+        lblTCFlights.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTCFlights.setText("Travel Central Flights");
         pnlMain.add(lblTCFlights);
-        lblTCFlights.setBounds(570, 110, 400, 60);
+        lblTCFlights.setBounds(580, 110, 400, 60);
         pnlMain.add(lblMain);
-        lblMain.setBounds(20, 80, 1540, 730);
+        lblMain.setBounds(0, 80, 1530, 730);
+
+        pnlHead.setBackground(new java.awt.Color(0, 0, 0));
+        pnlHead.setPreferredSize(new java.awt.Dimension(1536, 100));
+        pnlHead.setLayout(null);
+
+        btnLogOut.setBackground(new java.awt.Color(0, 0, 0));
+        btnLogOut.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogOut.setText("Log Out");
+        btnLogOut.setBorder(null);
+        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogOutActionPerformed(evt);
+            }
+        });
+        pnlHead.add(btnLogOut);
+        btnLogOut.setBounds(1430, 30, 80, 30);
+
+        lblTravel.setFont(new java.awt.Font("Perpetua Titling MT", 0, 12)); // NOI18N
+        lblTravel.setForeground(new java.awt.Color(255, 255, 255));
+        lblTravel.setText("T R A V E L");
+        pnlHead.add(lblTravel);
+        lblTravel.setBounds(60, 30, 70, 16);
+
+        lblCentral.setFont(new java.awt.Font("Perpetua Titling MT", 0, 12)); // NOI18N
+        lblCentral.setForeground(new java.awt.Color(255, 255, 255));
+        lblCentral.setText("C E N T R A L");
+        pnlHead.add(lblCentral);
+        lblCentral.setBounds(60, 50, 90, 15);
+
+        lblName.setForeground(new java.awt.Color(255, 255, 255));
+        lblName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblName.setText("Full Name");
+        pnlHead.add(lblName);
+        lblName.setBounds(0, 40, 1540, 16);
+
+        btnLogin.setBackground(new java.awt.Color(0, 0, 0));
+        btnLogin.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogin.setText("Login");
+        btnLogin.setBorder(null);
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
+        pnlHead.add(btnLogin);
+        btnLogin.setBounds(1350, 30, 80, 30);
+
+        btnSignUp.setBackground(new java.awt.Color(0, 0, 0));
+        btnSignUp.setForeground(new java.awt.Color(255, 255, 255));
+        btnSignUp.setText("Sign Up");
+        btnSignUp.setBorder(null);
+        btnSignUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSignUpActionPerformed(evt);
+            }
+        });
+        pnlHead.add(btnSignUp);
+        btnSignUp.setBounds(1190, 30, 80, 30);
+
+        btnHotelBooking.setBackground(new java.awt.Color(0, 0, 0));
+        btnHotelBooking.setForeground(new java.awt.Color(255, 255, 255));
+        btnHotelBooking.setText("Hotel Room");
+        btnHotelBooking.setBorder(null);
+        btnHotelBooking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHotelBookingActionPerformed(evt);
+            }
+        });
+        pnlHead.add(btnHotelBooking);
+        btnHotelBooking.setBounds(1270, 30, 80, 30);
+
+        pnlMain.add(pnlHead);
+        pnlHead.setBounds(0, 0, 1536, 80);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -301,8 +358,8 @@ public class SearchFlightUI extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1507, Short.MAX_VALUE)
-                .addGap(23, 23, 23))
+                .addComponent(pnlMain, javax.swing.GroupLayout.DEFAULT_SIZE, 1524, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -324,10 +381,6 @@ public class SearchFlightUI extends javax.swing.JFrame {
     private void cmbClassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbClassActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbClassActionPerformed
-
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnLoginActionPerformed
 
     private void rbtnOneWayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnOneWayActionPerformed
         // Clear the selection from the "Return" radio button
@@ -438,15 +491,14 @@ public class SearchFlightUI extends javax.swing.JFrame {
         String travelClass = cmbClass.getSelectedItem().toString();
         boolean isOneWay = rbtnOneWay.isSelected();
 
-        // Create the AvailableFlightsSearch frame
-        AvailableFlightsSearch mainFrame = new AvailableFlightsSearch(departureAirport, arrivalAirport, departureDate, returnDate, numPassengers, travelClass, isOneWay);
+        // Create the DepartureFlightUI frame
+        DepartureFlightUI mainFrame = new DepartureFlightUI(departureAirport, arrivalAirport, departureDate, returnDate, numPassengers, travelClass, isOneWay);
 
-        // Pass user input data to the AvailableFlightsSearch frame
-        // Set the visibility of the AvailableFlightsSearch frame to true
+        // Pass user input data to the DepartureFlightUI frame
+        // Set the visibility of the DepartureFlightUI frame to true
         mainFrame.setVisible(true);
 
         // Set the visibility of the SearchFlightUI frame to false
-        //this.setVisible(false);
         dispose();
     }//GEN-LAST:event_btnSearchFilghtsActionPerformed
 
@@ -494,6 +546,40 @@ public class SearchFlightUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_cmboxDestinationItemStateChanged
 
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        LoginUI mainFrame = new LoginUI();
+
+        // Set the visibility of the SearchFlightUI frame
+        mainFrame.setVisible(true);
+
+        // Close the current frame (assuming this is in DepartureFlightUI)
+        this.dispose();
+    }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnSignUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSignUpActionPerformed
+        SignUpUI mainFrame = new SignUpUI();
+
+        // Set the visibility of the SearchFlightUI frame
+        mainFrame.setVisible(true);
+
+        // Close the current frame (assuming this is in DepartureFlightUI)
+        this.dispose();
+    }//GEN-LAST:event_btnSignUpActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        LogOutUI logOut = new LogOutUI();
+        
+        logOut.setVisible(true);
+        
+        this.dispose();
+    }//GEN-LAST:event_btnLogOutActionPerformed
+
+    private void btnHotelBookingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHotelBookingActionPerformed
+        BookingViewUI bookingView = new BookingViewUI();
+        bookingView.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnHotelBookingActionPerformed
+
     // Method to populate the combo box with airport names
     private void populateCmbDeparture() {
         ProgramManager programManager = new ProgramManager();
@@ -533,55 +619,6 @@ public class SearchFlightUI extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        //??????????????????????????????????????????????????????????????????????????
-        /*
-        EventQueue.invokeLater(() -> {
-            Logo logoFrame = new Logo();
-            logoFrame.setVisible(true);
-
-            // Add a delay if needed before showing the main frame
-            try {
-                Thread.sleep(2000); // Delay for 2 seconds (2000 milliseconds)
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            // Close the logo frame and open the main frame
-            logoFrame.dispose(); // Close the logo frame
-            SearchFlightUI mainFrame = new SearchFlightUI();
-            mainFrame.setVisible(true);
-        });*/
-        //??????????????????????????????????????????????????????????????????????????
-
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SearchFlightUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SearchFlightUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SearchFlightUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SearchFlightUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -593,8 +630,11 @@ public class SearchFlightUI extends javax.swing.JFrame {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnHotelBooking;
+    private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnLogin;
     private javax.swing.JButton btnSearchFilghts;
+    private javax.swing.JButton btnSignUp;
     private javax.swing.ButtonGroup btngrpBookingType;
     private javax.swing.JComboBox<String> cmbClass;
     private javax.swing.JComboBox<String> cmboxDestination;
@@ -602,19 +642,22 @@ public class SearchFlightUI extends javax.swing.JFrame {
     private com.toedter.calendar.JDateChooser dtchooserDeparture;
     private com.toedter.calendar.JDateChooser dtchooserReturn;
     private javax.swing.JLabel lblArrivalAirport;
+    private javax.swing.JLabel lblCentral;
     private javax.swing.JLabel lblClass;
     private javax.swing.JLabel lblDepartureAirport;
     private javax.swing.JLabel lblDepartureDate;
     private javax.swing.JLabel lblLeftArrow;
     private javax.swing.JLabel lblMain;
+    private javax.swing.JLabel lblName;
     private javax.swing.JLabel lblNumPassengers;
     private javax.swing.JLabel lblReturnDate;
     private javax.swing.JLabel lblRightArrow;
     private javax.swing.JLabel lblRightArrow1;
     private javax.swing.JLabel lblTCFlights;
+    private javax.swing.JLabel lblTravel;
     private javax.swing.JPanel pnlDetails;
+    private javax.swing.JPanel pnlHead;
     private javax.swing.JPanel pnlMain;
-    private javax.swing.JPanel pnlMenu;
     private javax.swing.JRadioButton rbtnOneWay;
     private javax.swing.JRadioButton rbtnReturn;
     private javax.swing.JSpinner spnNumPassengers;

@@ -6,7 +6,7 @@ package travelcentralflightmanagementsystem;
 
 /**
  *
- * @author okhum
+ * @author the_scs
  */
 public class Airport {
     private int airportID;

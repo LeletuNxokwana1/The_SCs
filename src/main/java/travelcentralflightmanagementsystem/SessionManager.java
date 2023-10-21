@@ -6,35 +6,37 @@ package travelcentralflightmanagementsystem;
 
 /**
  *
- * @author lelet
+ * @author the_scs
  */
-import java.util.HashMap;
-import java.util.Map;
 
 public class SessionManager {
-    private static SessionManager instance;
-    private Map<String, Object> sessionData;
+    private static User loggedInUser; // Assuming User is the class representing your user
 
+    // Private constructor to prevent instantiation
     private SessionManager() {
-        sessionData = new HashMap<>();
     }
 
-    public static SessionManager getInstance() {
-        if (instance == null) {
-            instance = new SessionManager();
+    public static void login(User user) {
+        loggedInUser = user;
+    }
+
+    public static void logout() {
+        loggedInUser = null;
+    }
+
+    public static User getLoggedInUser() {
+        return loggedInUser;
+    }
+
+    public static boolean isLoggedIn() {
+        return loggedInUser != null;
+    }
+    
+    public static String getLoggedInUsername() {
+        if (loggedInUser != null) {
+            return loggedInUser.getFirstName() + " " + loggedInUser.getLastName();
         }
-        return instance;
+        return null;
     }
 
-    public void storeLoggedInUser(String email) {
-        // Store user-specific data in the session
-        sessionData.put("loggedInUser", email);
-    }
-
-    public String getLoggedInUser() {
-        // Retrieve user-specific data from the session
-        return (String) sessionData.get("loggedInUser");
-    }
-
-    // Other session-related methods can go here
 }

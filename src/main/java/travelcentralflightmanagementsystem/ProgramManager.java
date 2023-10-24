@@ -1167,7 +1167,7 @@ public class ProgramManager {
     }
 
     ////////////////////////////////////////// Check if an inserted booking reference exists //////////////////////////////////////////
-    public static boolean isBookingNumberExists(String bookingNumber) throws SQLException {
+    public boolean isBookingNumberExists(String bookingNumber) throws SQLException {
         String sql = "SELECT COUNT(*) FROM flightBooking WHERE bookingNumber = ?";
         try (Connection connection = DatabaseConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -1184,7 +1184,7 @@ public class ProgramManager {
     }
 
     ////////////////////////////////////////// Retrieve a Booked Departure Flight using the booking reference //////////////////////////////////////////
-    public static DepartureFlight retrieveFlightBookingInfo(String bookingNumber) throws SQLException {
+    public DepartureFlight retrieveFlightBookingInfo(String bookingNumber) throws SQLException {
         DepartureFlight departureFlight = null;
         String sql = "SELECT sf.* FROM flightbooking fb " +
                  "JOIN scheduledflight sf ON fb.depScheduledFlightID = sf.scheduledFlightID " +
@@ -1237,7 +1237,7 @@ public class ProgramManager {
     }
 
     ////////////////////////////////////////// Check if a hotel booking was made using the booking reference //////////////////////////////////////////
-    public static boolean isHotelBookingExists(String bookingNumber) throws SQLException {
+    public boolean isHotelBookingExists(String bookingNumber) throws SQLException {
         String sql = "SELECT COUNT(*) FROM hotelBooking WHERE bookingNumber = ?";
         try (Connection connection = DatabaseConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 

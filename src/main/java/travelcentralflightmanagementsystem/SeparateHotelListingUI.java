@@ -21,7 +21,7 @@ import javax.swing.table.TableColumnModel;
 
 /**
  *
- * @author okhum
+ * @author the_scs
  */
 public class SeparateHotelListingUI extends javax.swing.JFrame {
 

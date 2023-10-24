@@ -4,13 +4,17 @@
  */
 package travelcentralflightmanagementsystem;
 
+import java.awt.ScrollPane;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.GroupLayout;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 
 /**
  *
- * @author okhum
+ * @author the_scs
  */
 public class SeparateHotelBookingUI extends javax.swing.JFrame {
 
@@ -24,7 +28,7 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
     private int arrivalAirportID;
     private int userID;
     ProgramManager programManager;
-    
+
     public SeparateHotelBookingUI(String checkInDate, String checkOutDate, boolean meals, float hotelCost, int numNights, float mealCost, String bookingNumber, int arrivalAirportID) {
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
@@ -34,19 +38,43 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         this.bookingNumber = bookingNumber;
         this.arrivalAirportID = arrivalAirportID;
         programManager = new ProgramManager();
-        
+
         initComponents();
-        
+
+        pnlPaymentDetails.setVisible(false);
+        lblPaymentDetails.setVisible(false);
+        lblPaymentMethod.setVisible(false);
+
+        rbtnVisa.setVisible(false);
+        rbtnMasterCard.setVisible(false);
+
         if (!SessionManager.isLoggedIn()) {
-            lblName.setVisible(false);
+            lblName1.setVisible(false);
             btnLogOut.setVisible(false);
         } else {
-            lblName.setText(SessionManager.getLoggedInUsername());
+            lblName1.setText(SessionManager.getLoggedInUsername());
         }
-        
+
         populateDetails();
-        
+
         userID = SessionManager.getLoggedInUser().getUserID();
+
+        JScrollPane scrollPane = new JScrollPane(pnlDetails);
+        JScrollBar verticalScrollBar = new JScrollBar(JScrollBar.VERTICAL);
+        scrollPane.setVerticalScrollBar(verticalScrollBar);
+
+        GroupLayout layout = new GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+        );
+
+        pack();
     }
 
     /**
@@ -61,7 +89,6 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         pnlDetails = new javax.swing.JPanel();
         lblPaymentDetails = new javax.swing.JLabel();
         pnlPaymentDetails = new javax.swing.JPanel();
-        jLabel20 = new javax.swing.JLabel();
         lblCardDetails = new javax.swing.JLabel();
         lblBillingAddressLine = new javax.swing.JLabel();
         lblCardNumber = new javax.swing.JLabel();
@@ -105,15 +132,16 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         lblTotal = new javax.swing.JLabel();
         btnProceedToPayment = new javax.swing.JButton();
         lblHotelDetails = new javax.swing.JLabel();
-        pnlHead = new javax.swing.JPanel();
-        lblInstruction = new javax.swing.JLabel();
-        lblTravel = new javax.swing.JLabel();
-        lblCentral = new javax.swing.JLabel();
-        lblName = new javax.swing.JLabel();
-        btnBackToSearch = new javax.swing.JButton();
-        btnLogOut = new javax.swing.JButton();
+        pnlHead1 = new javax.swing.JPanel();
+        lblInstruction1 = new javax.swing.JLabel();
+        lblTravel1 = new javax.swing.JLabel();
+        lblCentral1 = new javax.swing.JLabel();
+        lblName1 = new javax.swing.JLabel();
+        btnBackToSearch1 = new javax.swing.JButton();
+        btnLogOut1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(1536, 1536));
         getContentPane().setLayout(null);
 
         pnlDetails.setBackground(new java.awt.Color(255, 255, 255));
@@ -129,8 +157,6 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         pnlPaymentDetails.setMaximumSize(new java.awt.Dimension(32767, 32769));
         pnlPaymentDetails.setPreferredSize(new java.awt.Dimension(930, 7910));
         pnlPaymentDetails.setLayout(null);
-        pnlPaymentDetails.add(jLabel20);
-        jLabel20.setBounds(705, 12, 0, 93);
 
         lblCardDetails.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         lblCardDetails.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -339,36 +365,20 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         pnlHotelDetails.setBounds(480, 80, 560, 270);
 
         pnlTotal.setBackground(new java.awt.Color(255, 255, 255));
+        pnlTotal.setLayout(null);
 
         lblTotalDue.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblTotalDue.setText("Total Due: R");
+        pnlTotal.add(lblTotalDue);
+        lblTotalDue.setBounds(6, 6, 107, 25);
 
         lblTotal.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         lblTotal.setText("0000.00");
-
-        javax.swing.GroupLayout pnlTotalLayout = new javax.swing.GroupLayout(pnlTotal);
-        pnlTotal.setLayout(pnlTotalLayout);
-        pnlTotalLayout.setHorizontalGroup(
-            pnlTotalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTotalLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblTotalDue, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
-        );
-        pnlTotalLayout.setVerticalGroup(
-            pnlTotalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTotalLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(pnlTotalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTotalDue)
-                    .addComponent(lblTotal))
-                .addGap(21, 21, 21))
-        );
+        pnlTotal.add(lblTotal);
+        lblTotal.setBounds(119, 6, 95, 25);
 
         pnlDetails.add(pnlTotal);
-        pnlTotal.setBounds(650, 360, 260, 40);
+        pnlTotal.setBounds(650, 360, 200, 40);
 
         btnProceedToPayment.setBackground(new java.awt.Color(0, 0, 0));
         btnProceedToPayment.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
@@ -390,133 +400,74 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         getContentPane().add(pnlDetails);
         pnlDetails.setBounds(0, 130, 1499901, 1599964);
 
-        pnlHead.setBackground(new java.awt.Color(0, 0, 0));
+        pnlHead1.setBackground(new java.awt.Color(0, 0, 0));
+        pnlHead1.setLayout(null);
 
-        lblInstruction.setFont(new java.awt.Font("Segoe UI", 0, 32)); // NOI18N
-        lblInstruction.setForeground(new java.awt.Color(255, 255, 255));
-        lblInstruction.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblInstruction.setText("Review your Flight and Hotel Details");
+        lblInstruction1.setFont(new java.awt.Font("Segoe UI", 0, 32)); // NOI18N
+        lblInstruction1.setForeground(new java.awt.Color(255, 255, 255));
+        lblInstruction1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblInstruction1.setText("Review your Flight and Hotel Details");
+        pnlHead1.add(lblInstruction1);
+        lblInstruction1.setBounds(9, 43, 1530, 43);
 
-        lblTravel.setFont(new java.awt.Font("Perpetua Titling MT", 0, 12)); // NOI18N
-        lblTravel.setForeground(new java.awt.Color(255, 255, 255));
-        lblTravel.setText("T R A V E L");
+        lblTravel1.setFont(new java.awt.Font("Perpetua Titling MT", 0, 12)); // NOI18N
+        lblTravel1.setForeground(new java.awt.Color(255, 255, 255));
+        lblTravel1.setText("T R A V E L");
+        pnlHead1.add(lblTravel1);
+        lblTravel1.setBounds(59, 52, 70, 16);
 
-        lblCentral.setFont(new java.awt.Font("Perpetua Titling MT", 0, 12)); // NOI18N
-        lblCentral.setForeground(new java.awt.Color(255, 255, 255));
-        lblCentral.setText("C E N T R A L");
+        lblCentral1.setFont(new java.awt.Font("Perpetua Titling MT", 0, 12)); // NOI18N
+        lblCentral1.setForeground(new java.awt.Color(255, 255, 255));
+        lblCentral1.setText("C E N T R A L");
+        pnlHead1.add(lblCentral1);
+        lblCentral1.setBounds(59, 72, 90, 15);
 
-        lblName.setForeground(new java.awt.Color(255, 255, 255));
-        lblName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblName.setText("Full Name");
+        lblName1.setForeground(new java.awt.Color(255, 255, 255));
+        lblName1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblName1.setText("Full Name");
+        pnlHead1.add(lblName1);
+        lblName1.setBounds(9, 92, 1530, 16);
 
-        btnBackToSearch.setBackground(new java.awt.Color(0, 0, 0));
-        btnBackToSearch.setForeground(new java.awt.Color(255, 255, 255));
-        btnBackToSearch.setText("Back To Search");
-        btnBackToSearch.setBorder(null);
-        btnBackToSearch.addActionListener(new java.awt.event.ActionListener() {
+        btnBackToSearch1.setBackground(new java.awt.Color(0, 0, 0));
+        btnBackToSearch1.setForeground(new java.awt.Color(255, 255, 255));
+        btnBackToSearch1.setText("Back To Search");
+        btnBackToSearch1.setBorder(null);
+        btnBackToSearch1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBackToSearchActionPerformed(evt);
             }
         });
+        pnlHead1.add(btnBackToSearch1);
+        btnBackToSearch1.setBounds(1349, 22, 90, 30);
 
-        btnLogOut.setBackground(new java.awt.Color(0, 0, 0));
-        btnLogOut.setForeground(new java.awt.Color(255, 255, 255));
-        btnLogOut.setText("Log Out");
-        btnLogOut.setBorder(null);
-        btnLogOut.addActionListener(new java.awt.event.ActionListener() {
+        btnLogOut1.setBackground(new java.awt.Color(0, 0, 0));
+        btnLogOut1.setForeground(new java.awt.Color(255, 255, 255));
+        btnLogOut1.setText("Log Out");
+        btnLogOut1.setBorder(null);
+        btnLogOut1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogOutActionPerformed(evt);
             }
         });
+        pnlHead1.add(btnLogOut1);
+        btnLogOut1.setBounds(1439, 22, 80, 30);
 
-        javax.swing.GroupLayout pnlHeadLayout = new javax.swing.GroupLayout(pnlHead);
-        pnlHead.setLayout(pnlHeadLayout);
-        pnlHeadLayout.setHorizontalGroup(
-            pnlHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1548, Short.MAX_VALUE)
-            .addGroup(pnlHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlHeadLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addGroup(pnlHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlHeadLayout.createSequentialGroup()
-                            .addGap(50, 50, 50)
-                            .addGroup(pnlHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblTravel, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblCentral, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(1200, 1200, 1200)
-                            .addComponent(btnBackToSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 0, 0)
-                            .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(lblInstruction, javax.swing.GroupLayout.PREFERRED_SIZE, 1530, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 1530, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-        pnlHeadLayout.setVerticalGroup(
-            pnlHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 140, Short.MAX_VALUE)
-            .addGroup(pnlHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(pnlHeadLayout.createSequentialGroup()
-                    .addGap(0, 0, Short.MAX_VALUE)
-                    .addGroup(pnlHeadLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlHeadLayout.createSequentialGroup()
-                            .addGap(30, 30, 30)
-                            .addComponent(lblTravel, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(4, 4, 4)
-                            .addComponent(lblCentral))
-                        .addComponent(btnBackToSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnLogOut, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(pnlHeadLayout.createSequentialGroup()
-                            .addGap(21, 21, 21)
-                            .addComponent(lblInstruction)))
-                    .addGap(5, 5, 5)
-                    .addComponent(lblName)
-                    .addGap(0, 0, Short.MAX_VALUE)))
-        );
-
-        getContentPane().add(pnlHead);
-        pnlHead.setBounds(0, 0, 1548, 140);
+        getContentPane().add(pnlHead1);
+        pnlHead1.setBounds(-1, 0, 1540, 130);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void chkboxTsnCsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkboxTsnCsActionPerformed
-        if (chkboxTsnCs.isSelected()) {
-            btnPay.setEnabled(true);
-        } else {
-            btnPay.setEnabled(false);
-        }
-    }//GEN-LAST:event_chkboxTsnCsActionPerformed
+    private void btnProceedToPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProceedToPaymentActionPerformed
+        btnProceedToPayment.setVisible(false);
 
-    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
+        lblPaymentDetails.setVisible(true);
+        lblPaymentMethod.setVisible(true);
 
-        int hotelID = programManager.retrieveHotelIDByCityID(programManager.retrieveCityID(programManager.retrieveCityName(arrivalAirportID)));
-
-        // Call the method to add flight and hotel booking
-        
-        programManager.addHotelBooking(bookingNumber, checkInDate, checkOutDate, hotelCost, "Confirmed", userID, hotelID);
-
-        HotelBookingConfirmationUI mainFrame = new HotelBookingConfirmationUI(bookingNumber);
-
-        // Set the visibility of the SearchFlightUI frame
-        mainFrame.setVisible(true);
-
-        // Close the current frame (assuming this is in AvailableFlightsSearch)
-        this.dispose();
-    }//GEN-LAST:event_btnPayActionPerformed
-
-    private void rbtnVisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnVisaActionPerformed
-        if (rbtnVisa.isSelected()) {
-            txtfieldCardNumber.setText("4917484589897107");
-            jMonthChooser1.setMonth(1);
-            jYearChooser1.setYear(2026);
-            txtfieldCVC.setText("548");
-        } else if (rbtnMasterCard.isSelected()) {
-            txtfieldCardNumber.setText("5425233430109903");
-            jMonthChooser1.setMonth(8);
-            jYearChooser1.setYear(2025);
-            txtfieldCVC.setText("764");
-        }
-    }//GEN-LAST:event_rbtnVisaActionPerformed
+        rbtnVisa.setVisible(true);
+        rbtnMasterCard.setVisible(true);
+        pnlPaymentDetails.setVisible(true);
+    }//GEN-LAST:event_btnProceedToPaymentActionPerformed
 
     private void rbtnMasterCardActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnMasterCardActionPerformed
         if (rbtnVisa.isSelected()) {
@@ -532,19 +483,51 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_rbtnMasterCardActionPerformed
 
-    private void btnProceedToPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProceedToPaymentActionPerformed
-        btnProceedToPayment.setVisible(false);
+    private void rbtnVisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnVisaActionPerformed
+        if (rbtnVisa.isSelected()) {
+            txtfieldCardNumber.setText("4917484589897107");
+            jMonthChooser1.setMonth(1);
+            jYearChooser1.setYear(2026);
+            txtfieldCVC.setText("548");
+        } else if (rbtnMasterCard.isSelected()) {
+            txtfieldCardNumber.setText("5425233430109903");
+            jMonthChooser1.setMonth(8);
+            jYearChooser1.setYear(2025);
+            txtfieldCVC.setText("764");
+        }
+    }//GEN-LAST:event_rbtnVisaActionPerformed
 
-        lblPaymentDetails.setVisible(true);
-        lblPaymentMethod.setVisible(true);
+    private void btnPayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayActionPerformed
 
-        rbtnVisa.setVisible(true);
-        rbtnMasterCard.setVisible(true);
-        pnlPaymentDetails.setVisible(true);
+        int hotelID = programManager.retrieveHotelIDByCityID(programManager.getCityIDByName(programManager.retrieveCityName(arrivalAirportID)));
 
-        pnlPaymentDetails.setVisible(true);
+        // Call the method to add flight and hotel booking
+        programManager.addHotelBooking(bookingNumber, checkInDate, checkOutDate, hotelCost, "Confirmed", userID, hotelID);
 
-    }//GEN-LAST:event_btnProceedToPaymentActionPerformed
+        HotelBookingConfirmationUI mainFrame = new HotelBookingConfirmationUI(bookingNumber);
+
+        // Set the visibility of the SearchFlightUI frame
+        mainFrame.setVisible(true);
+
+        // Close the current frame (assuming this is in AvailableFlightsSearch)
+        this.dispose();
+    }//GEN-LAST:event_btnPayActionPerformed
+
+    private void chkboxTsnCsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkboxTsnCsActionPerformed
+        if (chkboxTsnCs.isSelected()) {
+            btnPay.setEnabled(true);
+        } else {
+            btnPay.setEnabled(false);
+        }
+    }//GEN-LAST:event_chkboxTsnCsActionPerformed
+
+    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
+        LogOutUI logOut = new LogOutUI();
+
+        logOut.setVisible(true);
+
+        this.dispose();
+    }//GEN-LAST:event_btnLogOutActionPerformed
 
     private void btnBackToSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackToSearchActionPerformed
         HotelListingUI mainFrame;
@@ -559,24 +542,16 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBackToSearchActionPerformed
 
-    private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
-        LogOutUI logOut = new LogOutUI();
-
-        logOut.setVisible(true);
-
-        this.dispose();
-    }//GEN-LAST:event_btnLogOutActionPerformed
-
     private void populateDetails() {
-        
+
         lblHotelStayTotal.setText(Float.toString(hotelCost));
-        
+
         lblDays.setText(Integer.toString(numNights));
-        
+
         lblMealsTotal.setText(Float.toString(mealCost));
 
         lblTotal.setText(Float.toString(hotelCost + mealCost));
-        
+
         if (!SessionManager.isLoggedIn()) {
             txtfieldCardOwner.setText("User User");
         } else {
@@ -596,13 +571,13 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
         }
 
         if (!SessionManager.isLoggedIn()) {
-            lblName.setVisible(false);
+            lblName1.setVisible(false);
             btnLogOut.setVisible(false);
         } else {
-            lblName.setText(SessionManager.getLoggedInUsername());
+            lblName1.setText(SessionManager.getLoggedInUsername());
         }
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -640,11 +615,12 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBackToSearch;
+    private javax.swing.JButton btnBackToSearch1;
     private javax.swing.JButton btnLogOut;
+    private javax.swing.JButton btnLogOut1;
     private javax.swing.JButton btnPay;
     private javax.swing.JButton btnProceedToPayment;
     private javax.swing.JCheckBox chkboxTsnCs;
-    private javax.swing.JLabel jLabel20;
     private com.toedter.calendar.JMonthChooser jMonthChooser1;
     private com.toedter.calendar.JYearChooser jYearChooser1;
     private javax.swing.JLabel lblBillingAddress;
@@ -655,6 +631,7 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblCardNumber;
     private javax.swing.JLabel lblCardOwner;
     private javax.swing.JLabel lblCentral;
+    private javax.swing.JLabel lblCentral1;
     private javax.swing.JLabel lblCountry;
     private javax.swing.JLabel lblDays;
     private javax.swing.JLabel lblDepartureFlight1;
@@ -664,10 +641,12 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblHotelStayR;
     private javax.swing.JLabel lblHotelStayTotal;
     private javax.swing.JLabel lblInstruction;
+    private javax.swing.JLabel lblInstruction1;
     private javax.swing.JLabel lblMeals;
     private javax.swing.JLabel lblMealsR;
     private javax.swing.JLabel lblMealsTotal;
     private javax.swing.JLabel lblName;
+    private javax.swing.JLabel lblName1;
     private javax.swing.JLabel lblPaymentDetails;
     private javax.swing.JLabel lblPaymentMethod;
     private javax.swing.JLabel lblPostalCode;
@@ -678,8 +657,10 @@ public class SeparateHotelBookingUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblTotalDue;
     private javax.swing.JLabel lblTown;
     private javax.swing.JLabel lblTravel;
+    private javax.swing.JLabel lblTravel1;
     private javax.swing.JPanel pnlDetails;
     private javax.swing.JPanel pnlHead;
+    private javax.swing.JPanel pnlHead1;
     private javax.swing.JPanel pnlHotelDetails;
     private javax.swing.JPanel pnlPaymentDetails;
     private javax.swing.JPanel pnlTotal;

@@ -9,7 +9,7 @@ import java.util.logging.Level;
 
 /**
  *
- * @author okhum
+ * @author the_scs
  */
 public class SeparateHotelMealsUI extends javax.swing.JFrame {
 

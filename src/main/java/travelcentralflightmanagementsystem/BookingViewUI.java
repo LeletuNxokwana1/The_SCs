@@ -8,9 +8,10 @@ import javax.swing.table.DefaultTableModel;
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
+
 /**
  *
- * @author okhum
+ * @author the_scs
  */
 public class BookingViewUI extends javax.swing.JFrame {
 
@@ -168,15 +169,15 @@ public class BookingViewUI extends javax.swing.JFrame {
 
     private void btnBookaHotelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBookaHotelActionPerformed
         // Prompt the user for booking number
-        String bookingNumber = JOptionPane.showInputDialog(this, "Please enter your booking number:");
+        String bookingNumber = JOptionPane.showInputDialog(this, "Please enter your booking reference:");
 
         // Check if booking number is not null or empty
         if (bookingNumber != null && !bookingNumber.trim().isEmpty()) {
             try {
                 // Check if the booking number exists in flight booking
-                if (ProgramManager.isBookingNumberExists(bookingNumber)) {
+                if (programManager.isBookingNumberExists(bookingNumber)) {
                     // Check if the booking number exists in hotel booking
-                    if (ProgramManager.isHotelBookingExists(bookingNumber)) {
+                    if (programManager.isHotelBookingExists(bookingNumber)) {
                         // Display a message that a hotel room has already been booked
                         JOptionPane.showMessageDialog(this, "A hotel room has already been booked for this reservation.");
                     } else {
@@ -194,7 +195,7 @@ public class BookingViewUI extends javax.swing.JFrame {
                     }
                 } else {
                     // Display an error message that the booking number does not exist
-                    JOptionPane.showMessageDialog(this, "Invalid booking number. Please check and try again.");
+                    JOptionPane.showMessageDialog(this, "Invalid booking reference. Please check and try again.");
                 }
             } catch (SQLException ex) {
                 ex.printStackTrace();
@@ -203,7 +204,7 @@ public class BookingViewUI extends javax.swing.JFrame {
             }
         } else {
             // Display an error message that the booking number is empty
-            JOptionPane.showMessageDialog(this, "Please enter a valid booking number.");
+            JOptionPane.showMessageDialog(this, "Please enter a valid booking reference.");
         }
 
     }//GEN-LAST:event_btnBookaHotelActionPerformed

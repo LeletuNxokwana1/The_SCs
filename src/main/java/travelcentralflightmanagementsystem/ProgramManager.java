@@ -563,6 +563,7 @@ public class ProgramManager {
             System.out.println("SQL Query: " + preparedStatement.toString());
 
             preparedStatement.executeUpdate();
+            JOptionPane.showMessageDialog(null, "User status updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1275,5 +1276,34 @@ public class ProgramManager {
         }
 
         return cityName;
+    }
+    
+    ////////////////////////////////////////// Update aircraft status with aircraft ID and the new status //////////////////////////////////////////
+    public void updateAircraftStatus(int aircraftID, String newStatus) {
+        System.out.println("Updating status for Aircraft ID: " + aircraftID);
+        String sql = "UPDATE aircraft SET aircraftStatus = ? WHERE aircraftID = ?";
+
+        try (Connection connection = DatabaseConnection.getConnection(); 
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, newStatus);
+            preparedStatement.setInt(2, aircraftID);
+
+            // Print the SQL query for debugging
+            System.out.println("SQL Query: " + preparedStatement.toString());
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            
+            if (rowsAffected > 0) {
+                // Display a JOptionPane message for successful update
+                JOptionPane.showMessageDialog(null, "Aircraft status updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                // Display a JOptionPane message for unsuccessful update
+                JOptionPane.showMessageDialog(null, "Failed to update aircraft status.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

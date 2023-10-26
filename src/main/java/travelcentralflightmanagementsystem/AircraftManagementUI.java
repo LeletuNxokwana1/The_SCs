@@ -4,15 +4,11 @@
  */
 package travelcentralflightmanagementsystem;
 
-import java.sql.*;
-
 /**
  *
  * @author the_scs
  */
 public class AircraftManagementUI extends javax.swing.JFrame {
-
-    private Object MySQLConnection;
 
     
     public AircraftManagementUI() {
@@ -24,25 +20,6 @@ public class AircraftManagementUI extends javax.swing.JFrame {
             lblName.setText(SessionManager.getLoggedInUsername());
         }
 
-    }
-    private static Connection connection = null;
-
-    public static Connection getConnection() {
-        if (connection == null) {
-            try {
-                // Get the database connection parameters
-                String url = "jdbc:mysql://localhost:3306/travelcentral";
-                String username = "root";
-                String password = "b!Q204XaPaFi";
-
-                // Create a new connection to the database
-                connection = DriverManager.getConnection(url, username, password);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        return connection;
     }
 
     /**
@@ -272,81 +249,18 @@ public class AircraftManagementUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldIDActionPerformed
-
-        // Get the aircraft ID from the text field
-        int aircraftID = Integer.parseInt(jTextFieldID.getText());
-
-        if (connection == null) {
-            try {
-                // Get the database connection parameters
-                String url = "jdbc:mysql://localhost:3306/travelcentral";
-                String username = "root";
-                String password = "b!Q204XaPaFi";
-
-                Statement statement = connection.createStatement();
-
-                // Create the SELECT query
-                String query = "SELECT aircraftstatus FROM aircraft WHERE aircraftID = " + aircraftID;
-
-                // Execute the query and get the results
-                ResultSet results = statement.executeQuery(query);
-
-                // Get the status of the aircraft
-                String status = results.getString("aircraftstatus");
-                // Close the ResultSet and Statement objects
-                results.close();
-                statement.close();
-
-                // Update the status of the aircraft
-                updateAircraftStatus(aircraftID, status);
-
-                // Close the Connection object
-                connection.close();
-
-                // Create a new connection to the database
-                connection = DriverManager.getConnection(url, username, password);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
+ 
 
     }//GEN-LAST:event_jTextFieldIDActionPerformed
 
     private void jButtonUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonUpdateActionPerformed
 
-        if (connection == null) {
-            try {
-                // Get the database connection parameters
-                String url = "jdbc:mysql://localhost:3306/travelcentral";
-                String username = "root";
-                String password = "b!Q204XaPaFi";
-
-                String status = (String) jComboBoxStatus.getSelectedItem();
-
-                // Get the aircraft ID from the text field
-                int aircraftID = Integer.parseInt(jTextFieldID.getText());
-                // Create a new connection to the database
-                connection = DriverManager.getConnection(url, username, password);
-                // Create a new Statement object
-                Statement statement = connection.createStatement();
-
-                // Create the UPDATE query
-                String query = "UPDATE aircraft SET aircraftstatus = '" + status + "' WHERE aircraftID = " + aircraftID;
-
-                // Execute the query
-                statement.executeUpdate(query);
-
-                // Close the Statement and Connection objects
-                statement.close();
-                connection.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            
-            System.exit(0);
-        }
-
+        String newStatus = (String) jComboBoxStatus.getSelectedItem();
+        // Get the aircraft ID from the text field
+        int aircraftID = Integer.parseInt(jTextFieldID.getText());
+        
+        ProgramManager programManager = new ProgramManager();
+        programManager.updateAircraftStatus(aircraftID, newStatus);
 
     }//GEN-LAST:event_jButtonUpdateActionPerformed
 
@@ -456,7 +370,4 @@ public class AircraftManagementUI extends javax.swing.JFrame {
     private javax.swing.JPanel pnlSide;
     // End of variables declaration//GEN-END:variables
 
-    private void updateAircraftStatus(int aircraftID, String status) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

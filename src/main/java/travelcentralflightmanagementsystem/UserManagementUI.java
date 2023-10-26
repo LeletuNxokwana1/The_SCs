@@ -13,7 +13,6 @@ import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
 import travelcentralflightmanagementsystem.User.UserStatus;
 
 /**
@@ -123,7 +122,7 @@ public class UserManagementUI extends javax.swing.JFrame {
             }
         });
         pnlHead.add(btnLogOut);
-        btnLogOut.setBounds(1410, 30, 80, 30);
+        btnLogOut.setBounds(1430, 30, 80, 30);
 
         btnHome.setBackground(new java.awt.Color(0, 0, 0));
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
@@ -297,11 +296,17 @@ public class UserManagementUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
-        // Capture the selected status before updating
-        System.out.println("Selected Status for all users: " + selectedStatus);
-
-        // Update the status for all users
-        countUserBookingsAndUpdateStatus();
+        int selectedRow = jTable1.getSelectedRow();
+        
+        if (selectedRow == -1){
+            System.out.println("No user selected. Please select a user before confirming changes.");
+            return;
+        }
+        
+        selectedStatus = (String) jTable1.getValueAt(selectedRow, 6);
+        System.out.println("Selected Status for the selected user: " + selectedStatus);
+        
+        countUserBookingsAndUpdateStatus(selectedRow, selectedStatus);
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     private void btnFlightManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFlightManagementActionPerformed
@@ -311,7 +316,7 @@ public class UserManagementUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnFlightManagementActionPerformed
 
     private void btnUserManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserManagementActionPerformed
-        
+
     }//GEN-LAST:event_btnUserManagementActionPerformed
 
     private void btnHotelManagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHotelManagementActionPerformed
@@ -334,44 +339,19 @@ public class UserManagementUI extends javax.swing.JFrame {
 
     private void btnLogOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogOutActionPerformed
         LogOutUI logOut = new LogOutUI();
-
         logOut.setVisible(true);
-
         this.dispose();
     }//GEN-LAST:event_btnLogOutActionPerformed
 
-    private void countUserBookingsAndUpdateStatus() {
-        System.out.println("Counting user bookings and updating status...");
-        for (int row = 0; row < jTable1.getRowCount(); row++) {
-            int userID = (int) jTable1.getValueAt(row, 0);
-
-            // Check if the cell is editable (i.e., contains a JComboBox editor)
-            if (jTable1.isCellEditable(row, 6)) {
-                JComboBox<String> statusComboBox = getStatusComboBox(jTable1, row, 6);
-
-                if (statusComboBox != null) {
-                    String selectedStatus = (String) statusComboBox.getSelectedItem();
-                    System.out.println("Selected Status for User ID " + userID + ": " + selectedStatus);
-
-                    UserStatus updatedStatus = convertToUserStatusEnum(selectedStatus);
-                    programManager.updateUserStatus(userID, updatedStatus);
-                }
-            }
-        }
+    private void countUserBookingsAndUpdateStatus(int selectedRow, String selectedStatus) {
+        
+        int userID = (int) jTable1.getValueAt(selectedRow, 0);
+        
+        UserStatus updatedStatus = convertToUserStatusEnum(selectedStatus);
+        programManager.updateUserStatus(userID, updatedStatus);
 
         // Refresh the table after updating status for all rows
         displayUserInformation();
-    }
-
-    private JComboBox<String> getStatusComboBox(JTable jTable1, int row, int column) {
-        TableCellEditor editor = jTable1.getCellEditor(row, column);
-        if (editor instanceof DefaultCellEditor) {
-            Component editorComponent = ((DefaultCellEditor) editor).getComponent();
-            if (editorComponent instanceof JComboBox) {
-                return (JComboBox<String>) editorComponent;
-            }
-        }
-        return null;
     }
 
     private void displayUserInformation() {
@@ -424,20 +404,6 @@ public class UserManagementUI extends javax.swing.JFrame {
         JComboBox<String> statusComboBox = new JComboBox<>(statusItems);
         statusComboBox.setSelectedItem("Active"); // Set default status if needed
         jTable1.getColumnModel().getColumn(statusColumnIndex).setCellEditor(new DefaultCellEditor(statusComboBox));
-    }
-
-    class ComboBoxRenderer extends JComboBox<String> implements TableCellRenderer {
-
-        public ComboBoxRenderer(String[] items) {
-            super(items);
-            setEditable(true);
-        }
-
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            setSelectedItem(value);
-            return this;
-        }
     }
 
     /**

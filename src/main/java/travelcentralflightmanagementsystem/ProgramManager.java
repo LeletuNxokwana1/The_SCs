@@ -1123,20 +1123,27 @@ public class ProgramManager {
         tableModel.addColumn("Hotel Amount Paid");
         tableModel.addColumn("Booking Status");
 
-        String sql = "SELECT fb.bookingNumber, depAirport.airportName AS departureAirport, "
-                + "arrAirport.airportName AS arrivalAirport, depSF.scheduledFlightDepartureDate, "
-                + "arrSF.scheduledFlightArrivalDate, fb.flightBookingNumPassengers, "
+        String sql = "SELECT "
+                + "fb.bookingNumber, "
+                + "(SELECT airportName FROM airport WHERE airportID = depSF.departureAirportID) AS departureAirport, "
+                + "(SELECT airportName FROM airport WHERE airportID = arrSF.arrivalAirportID) AS arrivalAirport, "
+                + "depSF.scheduledFlightDepartureDate, "
+                + "arrSF.scheduledFlightArrivalDate, "
+                + "fb.flightBookingNumPassengers, "
                 + "fb.flightBookingTotalPrice AS flightAmountPaid, "
                 + "CASE WHEN hb.bookingNumber IS NOT NULL THEN 'Yes' ELSE 'No' END AS hasHotelBooking, "
                 + "COALESCE(hb.hotelBookingTotalPrice, 0) AS hotelAmountPaid, "
                 + "fb.overallBookingStatus "
-                + "FROM flightBooking fb "
-                + "JOIN scheduledflight depSF ON fb.depScheduledFlightID = depSF.scheduledFlightID "
-                + "JOIN scheduledflight arrSF ON fb.retScheduledFlightID = arrSF.scheduledFlightID "
-                + "JOIN airport depAirport ON depSF.departureAirportID = depAirport.airportID "
-                + "JOIN airport arrAirport ON arrSF.arrivalAirportID = arrAirport.airportID "
-                + "LEFT JOIN hotelBooking hb ON fb.bookingNumber = hb.bookingNumber "
-                + "WHERE fb.userID = ?";
+                + "FROM "
+                + "flightBooking fb "
+                + "JOIN "
+                + "scheduledflight depSF ON fb.depScheduledFlightID = depSF.scheduledFlightID "
+                + "JOIN "
+                + "scheduledflight arrSF ON fb.retScheduledFlightID = arrSF.scheduledFlightID "
+                + "LEFT JOIN "
+                + "hotelBooking hb ON fb.bookingNumber = hb.bookingNumber "
+                + "WHERE "
+                + "fb.userID = ?";
 
         try (Connection connection = DatabaseConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -1147,6 +1154,8 @@ public class ProgramManager {
                     String bookingNumber = resultSet.getString("bookingNumber");
                     String departureAirport = resultSet.getString("departureAirport");
                     String arrivalAirport = resultSet.getString("arrivalAirport");
+                    System.out.println("Departure Airport: " + departureAirport);
+                    System.out.println("Arrival Airport: " + arrivalAirport);
                     String departureDate = resultSet.getString("scheduledFlightDepartureDate");
                     String arrivalDate = resultSet.getString("scheduledFlightArrivalDate");
                     int numPassengers = resultSet.getInt("flightBookingNumPassengers");
@@ -1187,9 +1196,9 @@ public class ProgramManager {
     ////////////////////////////////////////// Retrieve a Booked Departure Flight using the booking reference //////////////////////////////////////////
     public DepartureFlight retrieveFlightBookingInfo(String bookingNumber) throws SQLException {
         DepartureFlight departureFlight = null;
-        String sql = "SELECT sf.* FROM flightbooking fb " +
-                 "JOIN scheduledflight sf ON fb.depScheduledFlightID = sf.scheduledFlightID " +
-                 "WHERE fb.bookingNumber = ?";
+        String sql = "SELECT sf.* FROM flightbooking fb "
+                + "JOIN scheduledflight sf ON fb.depScheduledFlightID = sf.scheduledFlightID "
+                + "WHERE fb.bookingNumber = ?";
 
         try (Connection connection = DatabaseConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
@@ -1200,7 +1209,7 @@ public class ProgramManager {
                     // Extract necessary information from the result set
                     int scheduledFlightID = resultSet.getInt("scheduledFlightID");
                     float scheduledFlightPrice = resultSet.getFloat("scheduledFlightPrice");
-                    
+
                     // Get departure time
                     java.sql.Timestamp timestamp = resultSet.getTimestamp("scheduledFlightDepartureDate"); // Retrieve the DATETIME value as a java.sql.Timestamp
                     Date retrievedDate = new Date(timestamp.getTime()); // Convert the java.sql.Timestamp to a java.util.Date
@@ -1218,7 +1227,7 @@ public class ProgramManager {
                     SimpleDateFormat timeFormat1 = new SimpleDateFormat("HH:mm");
                     String scheduledFlightArrivalDate = dateFormat1.format(retrievedDate1);
                     String scheduledFlightArrivalTime = timeFormat1.format(retrievedDate1);
-                    
+
                     String scheduledFlightStatus = resultSet.getString("scheduledFlightStatus");
                     int departureAirportID = resultSet.getInt("departureAirportID");
                     int arrivalAirportID = resultSet.getInt("arrivalAirportID");
@@ -1253,7 +1262,7 @@ public class ProgramManager {
         }
         return false;
     }
-    
+
     ////////////////////////////////////////// Retrieve cty name using airport ID //////////////////////////////////////////
     public String retrieveCityName(int airportID) {
         String cityName = null; // Default value if the airport name is not found
@@ -1277,14 +1286,13 @@ public class ProgramManager {
 
         return cityName;
     }
-    
+
     ////////////////////////////////////////// Update aircraft status with aircraft ID and the new status //////////////////////////////////////////
     public void updateAircraftStatus(int aircraftID, String newStatus) {
         System.out.println("Updating status for Aircraft ID: " + aircraftID);
         String sql = "UPDATE aircraft SET aircraftStatus = ? WHERE aircraftID = ?";
 
-        try (Connection connection = DatabaseConnection.getConnection(); 
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        try (Connection connection = DatabaseConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
             preparedStatement.setString(1, newStatus);
             preparedStatement.setInt(2, aircraftID);
@@ -1293,7 +1301,7 @@ public class ProgramManager {
             System.out.println("SQL Query: " + preparedStatement.toString());
 
             int rowsAffected = preparedStatement.executeUpdate();
-            
+
             if (rowsAffected > 0) {
                 // Display a JOptionPane message for successful update
                 JOptionPane.showMessageDialog(null, "Aircraft status updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);

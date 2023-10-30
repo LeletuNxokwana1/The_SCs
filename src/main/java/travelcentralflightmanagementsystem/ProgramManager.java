@@ -19,6 +19,7 @@ import java.util.List;
 import java.sql.Statement;
 import travelcentralflightmanagementsystem.User.UserStatus;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -76,48 +77,68 @@ public class ProgramManager {
         List<DepartureFlight> flights = new ArrayList<>();
         java.sql.Date sqlDate = new java.sql.Date(date.getTime()); // Convert java.util.date to java.sql.date
 
-        String sql = "SELECT sf.* FROM scheduledFlight sf INNER JOIN airport depAirport ON sf.departureAirportID = depAirport.airportID "
-                + "INNER JOIN airport arrAirport ON sf.arrivalAirportID = arrAirport.airportID "
-                + "WHERE depAirport.airportName = ? AND arrAirport.airportName = ? AND DATE(sf.scheduledFlightDepartureDate) = ?";
+        // Updated SQL query with correct parameter positions
+        String sql = "SELECT * FROM scheduledFlight "
+                + "WHERE departureAirportID = (SELECT airportID FROM airport WHERE airportName = ?) "
+                + "AND arrivalAirportID = (SELECT airportID FROM airport WHERE airportName = ?) "
+                + "AND DATE(scheduledFlightDepartureDate) = ?";
 
         try (Connection connection = DatabaseConnection.getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            // Set parameters in the correct order
             preparedStatement.setString(1, departureAirport);
             preparedStatement.setString(2, arrivalAirport);
-            preparedStatement.setDate(3, sqlDate);
+            preparedStatement.setString(3, sqlDate.toString());  // Convert to string for comparison
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                while (resultSet.next()) {
-                    int scheduledFlightID = resultSet.getInt("scheduledFlightID");
-                    float scheduledFlightPrice = resultSet.getFloat("scheduledFlightPrice");
+                if (!resultSet.isBeforeFirst()) {
+                    System.out.println("No flights found for the specified criteria.");
+                } else {
+                    while (resultSet.next()) {
+                        int scheduledFlightID = resultSet.getInt("scheduledFlightID");
+                        float scheduledFlightPrice = resultSet.getFloat("scheduledFlightPrice");
 
-                    // Get departure time
-                    java.sql.Timestamp timestamp = resultSet.getTimestamp("scheduledFlightDepartureDate"); // Retrieve the DATETIME value as a java.sql.Timestamp
-                    Date retrievedDate = new Date(timestamp.getTime()); // Convert the java.sql.Timestamp to a java.util.Date
-                    // Format date and time separately
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
-                    String scheduledFlightDepartureDate = dateFormat.format(retrievedDate);
-                    String scheduledFlightDepartureTime = timeFormat.format(retrievedDate);
+                        // Get departure time
+                        java.sql.Timestamp timestamp = resultSet.getTimestamp("scheduledFlightDepartureDate");
+                        Date retrievedDate = new Date(timestamp.getTime());
+                        // Format date and time separately
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                        String scheduledFlightDepartureDate = dateFormat.format(retrievedDate);
+                        String scheduledFlightDepartureTime = timeFormat.format(retrievedDate);
 
-                    // Get arrival time
-                    java.sql.Timestamp timestamp1 = resultSet.getTimestamp("scheduledFlightArrivalDate"); // Retrieve the DATETIME value as a java.sql.Timestamp
-                    Date retrievedDate1 = new Date(timestamp1.getTime()); // Convert the java.sql.Timestamp to a java.util.Date
-                    // Format date and time separately
-                    SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-                    SimpleDateFormat timeFormat1 = new SimpleDateFormat("HH:mm");
-                    String scheduledFlightArrivalDate = dateFormat1.format(retrievedDate1);
-                    String scheduledFlightArrivalTime = timeFormat1.format(retrievedDate1);
+                        // Get arrival time
+                        java.sql.Timestamp timestamp1 = resultSet.getTimestamp("scheduledFlightArrivalDate");
+                        Date retrievedDate1 = new Date(timestamp1.getTime());
+                        // Format date and time separately
+                        SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+                        SimpleDateFormat timeFormat1 = new SimpleDateFormat("HH:mm");
+                        String scheduledFlightArrivalDate = dateFormat1.format(retrievedDate1);
+                        String scheduledFlightArrivalTime = timeFormat1.format(retrievedDate1);
 
-                    String scheduledFlightStatus = resultSet.getString("scheduledFlightStatus");
-                    int departureAirportID = resultSet.getInt("departureAirportID");
-                    int arrivalAirportID = resultSet.getInt("arrivalAirportID");
-                    int aircraftID = resultSet.getInt("aircraftID");
+                        String scheduledFlightStatus = resultSet.getString("scheduledFlightStatus");
+                        int departureAirportID = resultSet.getInt("departureAirportID");
+                        int arrivalAirportID = resultSet.getInt("arrivalAirportID");
+                        int aircraftID = resultSet.getInt("aircraftID");
 
-                    DepartureFlight flight = new DepartureFlight(scheduledFlightID, scheduledFlightPrice, scheduledFlightDepartureDate, scheduledFlightDepartureTime, scheduledFlightArrivalDate, scheduledFlightArrivalTime, scheduledFlightStatus, departureAirportID, arrivalAirportID, aircraftID);
-                    flights.add(flight);
+                        DepartureFlight flight = new DepartureFlight(scheduledFlightID, scheduledFlightPrice, scheduledFlightDepartureDate, scheduledFlightDepartureTime, scheduledFlightArrivalDate, scheduledFlightArrivalTime, scheduledFlightStatus, departureAirportID, arrivalAirportID, aircraftID);
+                        flights.add(flight);
+
+                        System.out.println("Flight found:");
+                        System.out.println("scheduledFlightID: " + scheduledFlightID);
+                        System.out.println("Scheduled Departure Date: " + scheduledFlightDepartureDate);
+                        System.out.println("Scheduled Departure Time: " + scheduledFlightDepartureTime);
+                        System.out.println("Scheduled Arrival Date: " + scheduledFlightArrivalDate);
+                        System.out.println("Scheduled Arrival Time: " + scheduledFlightArrivalTime);
+                        System.out.println("Flight Status: " + scheduledFlightStatus);
+                        System.out.println("Departure Airport ID: " + departureAirportID);
+                        System.out.println("Arrival Airport ID: " + arrivalAirportID);
+                        System.out.println("Aircraft ID: " + aircraftID);
+                    }
+                    
+                    int numFlights = flights.size();
+                    DepartureFlight flight = new DepartureFlight(numFlights);
                 }
-                int numFlights = flights.size();
-                DepartureFlight flight = new DepartureFlight(numFlights);
             }
         } catch (SQLException e) {
             e.printStackTrace();

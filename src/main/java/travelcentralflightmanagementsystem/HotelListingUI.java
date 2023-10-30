@@ -85,10 +85,10 @@ public class HotelListingUI extends javax.swing.JFrame {
 
         initComponents();
         programManager = new ProgramManager();
-        lblTitle.setText(programManager.retrieveCityName(arrivalAirport) + " Hotel rooms for a " + calculateNumberOfDays(checkInDate, checkOutDate) +" night(s) stay");
+        lblTitle.setText(programManager.retrieveCityName(arrivalAirport) + " Hotel rooms for a " + calculateNumberOfDays(checkInDate, checkOutDate) + " night(s) stay");
         populateTable();
         btnReserve.setVisible(false);
-        
+
         if (!SessionManager.isLoggedIn()) {
             lblName.setVisible(false);
             btnLogOut.setVisible(false);
@@ -192,14 +192,14 @@ public class HotelListingUI extends javax.swing.JFrame {
     }
 
     private float updateTotalCost() {
-        int hotelCost1 = 0;
+        float hotelCost1 = 0.0f; // Change the data type to float
 
         for (int i = 0; i < tblRooms.getRowCount(); i++) {
-            int numberOfRooms = (int) tblRooms.getValueAt(i, 2); // The spinner is in the third column (index 2)
-            float roomTypeCost = (float) tblRooms.getValueAt(i, 3); // The cost is in the fourth column (index 3)
+            int numberOfRooms = (int) tblRooms.getValueAt(i, 2);
+            float roomTypeCost = (float) tblRooms.getValueAt(i, 3);
             hotelCost1 += numberOfRooms * roomTypeCost * calculateNumberOfDays(checkInDate, checkOutDate);
         }
-        
+
         return hotelCost1;
     }
 
